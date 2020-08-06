@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "699031584257",
+    "firebase_url": "https://pawsbook-59abc.firebaseio.com",
+    "project_id": "pawsbook-59abc",
+    "storage_bucket": "pawsbook-59abc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699031584257:android:b9973e7fe8ef01c9fc4a00",
+        "android_client_info": {
+          "package_name": "com.gamze.pawsbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699031584257-1e716i8e10hhuj5q5ius952hhn4eoqt4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gamze.pawsbook",
+            "certificate_hash": "f520c3327ffeb392d8d246bf1d6609acc95ebe5c"
+          }
+        },
+        {
+          "client_id": "699031584257-upt99dkqh339njmcnfon4rpr4fjqraq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf92z0yh21csjQXq_hJrBQ_5Ac-vnRMVY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699031584257-upt99dkqh339njmcnfon4rpr4fjqraq6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

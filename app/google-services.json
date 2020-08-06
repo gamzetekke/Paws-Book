@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "150892108997",
+    "firebase_url": "https://pawsbook-b1ce0.firebaseio.com",
+    "project_id": "pawsbook-b1ce0",
+    "storage_bucket": "pawsbook-b1ce0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150892108997:android:0820f14425d8c4837524ac",
+        "android_client_info": {
+          "package_name": "com.gamze.pawsbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "150892108997-cioqvbgt2dr0u8uhadfncndu7v7cdbp2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAc0ZAHSviI5zapAQjtSRQFIdIzXB6yKr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "150892108997-cioqvbgt2dr0u8uhadfncndu7v7cdbp2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
