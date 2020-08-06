@@ -98,7 +98,29 @@ public class RegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 // Sign in success, dismiss dialog and start register activity
                                 progressDialog.dismiss();
+
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                //Firebase auth'dan kullanıcı email ve uid bilgilerini al
+                                String email = user.getEmail();
+                                String uid = user.getUid();
+                                //Kullanıcı kaydoldugunda verileri depolamak için HashMap kullanılır
+                                //HashMap kullanımı
+                                HashMap<Object,String> hashMap = new HashMap<>();
+                                //bilgileri HashMap'e koyma
+                                hashMap.put("email", email);
+                                hashMap.put("uid", uid);
+                                hashMap.put("name",""); //profil ayarları sayfasında eklenecek
+                                hashMap.put("phone", "");//profil ayarları sayfasında eklenecek
+                                hashMap.put("image","" );//profil ayarları sayfasında eklenecek
+
+                                //firebase database
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                //"Users" isimli kullanıcının verilerini depolama
+                                DatabaseReference reference = database.getReference("Users");
+                                //HashMap ile verilerin database e eklenmesi
+                                reference.child(uid).setValue(hashMap);
+
+
                                 Toast.makeText(RegisterActivity.this,"Registered...\n"+user.getEmail(),Toast.LENGTH_SHORT).show();
 
                                 //HomeActivity başlat

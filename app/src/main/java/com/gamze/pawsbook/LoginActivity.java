@@ -34,6 +34,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.HashMap;
@@ -290,6 +292,28 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            //Firebase auth'dan kullanıcı email ve uid bilgilerini al
+                            String email = user.getEmail();
+                            String uid = user.getUid();
+                            //Kullanıcı kaydoldugunda verileri depolamak için HashMap kullanılır
+                            //HashMap kullanımı
+                            HashMap<Object,String> hashMap = new HashMap<>();
+                            //bilgileri HashMap'e koyma
+                            hashMap.put("email", email);
+                            hashMap.put("uid", uid);
+                            hashMap.put("name",""); //profil ayarları sayfasında eklenecek
+                            hashMap.put("phone", "");//profil ayarları sayfasında eklenecek
+                            hashMap.put("image","" );//profil ayarları sayfasında eklenecek
+
+                            //firebase database
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            //"Users" isimli kullanıcının verilerini depolama
+                            DatabaseReference reference = database.getReference("Users");
+                            //HashMap ile verilerin database e eklenmesi
+                            reference.child(uid).setValue(hashMap);
+
+
                             //Toast Mesaj ile kullanıcı email adresini göster
                             Toast.makeText(LoginActivity.this,""+user.getEmail(),Toast.LENGTH_SHORT).show();
                             //kullanıcı girişi başarılıysa profil activity e git
