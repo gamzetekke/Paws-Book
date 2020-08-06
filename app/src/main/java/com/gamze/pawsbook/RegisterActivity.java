@@ -11,6 +11,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     //layouttaki viewlerin tanımlanması
     EditText emailEt, passwordEt;
     Button button_register;
+    TextView have_accounttxt;
 
     //ProgressBar
     ProgressDialog progressDialog;
@@ -47,6 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         emailEt = findViewById(R.id.emailEt);
         passwordEt = findViewById(R.id.passwordEt);
+        have_accounttxt = findViewById(R.id.have_accounttxt);
         button_register = findViewById(R.id.button_register);
 
         // Initialize Firebase Auth
@@ -76,7 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
                     passwordEt.setFocusable(true);
                 }
                 else{
-                   // registerUser(email, password); //kullanıcıyı kaydet
+                   // registerUser(email, password);
+                    // kullanıcıyı kaydet
                     mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -87,7 +91,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(RegisterActivity.this,"Registered...\n"+user.getEmail(),Toast.LENGTH_SHORT).show();
 
                                 //HomeActivity başlat
-                                startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                                startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
                                 finish();
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -97,6 +101,16 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+        //have_accounttxt onClick özelliği aktifleştirme, tıklandığında login activity'e git
+        have_accounttxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -133,7 +147,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }*/
-
 
 
     @Override

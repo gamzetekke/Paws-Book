@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context=".RegisterActivity">
+    tools:context=".LoginActivity">
+
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Register"
+        android:text="Login"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="25sp"
         ></TextView>
@@ -56,25 +57,26 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    //buttonregister
+    //buttonlogin
     <Button
-        android:id="@+id/button_register"
-        android:text="Resigter"
+        android:id="@+id/button_login"
+        android:text="Login"
         android:background="@drawable/custom_button"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/passwordTIL"
+        android:drawableLeft="@drawable/key"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
     </Button>
 
-    //textView -> go to login activity
+    //textView -> go to register activity
     <TextView
-        android:id="@+id/have_accounttxt"
+        android:id="@+id/nothave_accounttxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Already have account? Login"
+        android:text="Not have account? Register"
         android:textAlignment="center"
-        android:layout_below="@+id/button_register"
+        android:layout_below="@+id/button_login"
         android:layout_marginTop="30dp"
         android:textColor="@color/colorPrimaryDark">
     </TextView>

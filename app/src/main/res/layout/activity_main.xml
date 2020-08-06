@@ -24,6 +24,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button"
+        android:drawableStart="@drawable/account"
+        android:drawableLeft="@drawable/account"
+        android:minWidth="230dp"
         android:layout_above="@+id/login_btn">
     </Button>
 
@@ -35,6 +38,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button"
         android:layout_alignParentBottom="true"
+        android:drawableStart="@drawable/key"
+        android:drawableLeft="@drawable/key"
+        android:minWidth="230dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="100dp">
     </Button>
