@@ -20,6 +20,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -33,6 +38,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     //FirebaseAuth bildirme
     private FirebaseAuth mAuth;
+
+    //Firebase Realtime Database
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        //realtime database
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
         //ProgressDialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering User...");
@@ -65,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //email ve şifre girme
-                String email = emailEt.getText().toString().trim();
+                final String email = emailEt.getText().toString().trim();
                 String password = passwordEt.getText().toString().trim();
 
                 //kontrol etme
@@ -93,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 //HomeActivity başlat
                                 startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
                                 finish();
+
                             } else {
                                 // If sign in fails, display a message to the user.
                                 progressDialog.dismiss();
