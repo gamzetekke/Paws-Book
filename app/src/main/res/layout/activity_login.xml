@@ -70,16 +70,31 @@
     </Button>
 
     //textView -> go to register activity
+
     <TextView
         android:id="@+id/nothave_accounttxt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="370dp"
+        android:layout_height="13dp"
+        android:layout_below="@+id/button_login"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="162dp"
+        android:layout_marginBottom="20dp"
         android:text="Not have account? Register"
         android:textAlignment="center"
-        android:layout_below="@+id/button_login"
-        android:layout_marginTop="30dp"
         android:textColor="@color/colorPrimaryDark">
     </TextView>
+
+    //textView -> forgot password
+    <TextView
+        android:id="@+id/recoverpassTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password? Recover"
+        android:layout_below="@+id/button_login"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAlignment="center">
+    </TextView>
+
 
 
 </RelativeLayout>

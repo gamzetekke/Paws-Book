@@ -4,13 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     //layouttaki viewlerin tanımlanması
     EditText emailEt, passwordEt;
     Button button_login;
-    TextView nothave_accounttxt;
+    TextView nothave_accounttxt, recoverpassText;
 
     //Declare an instance of FirebaseAuth
     private FirebaseAuth mAuth;
@@ -51,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         emailEt = findViewById(R.id.emailEt);
         passwordEt = findViewById(R.id.passwordEt);
         nothave_accounttxt = findViewById(R.id.nothave_accounttxt);
+        recoverpassText = findViewById(R.id.recoverpassTxt);
         button_login = findViewById(R.id.button_login);
 
         // Initialize Firebase Auth
@@ -83,17 +88,101 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
+            }
+        });
+
+        //recoverpassText onClick özelliğini ekleme
+        recoverpassText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRecoverPasswordDialog();
             }
         });
 
         //ProgressDialog
         pd = new ProgressDialog(this);
-        pd.setMessage("Logging in...");
 
+    }
+
+    //textView e tıklandığında dialog açılması için
+    private void showRecoverPasswordDialog() {
+        //AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Recover Password");
+
+        //LinearLayout kurma
+        LinearLayout linearLayout = new LinearLayout(this);
+
+        //Email adresini girmek için editText
+        final EditText emailEt = new EditText(this);
+        emailEt.setHint("Email");
+        emailEt.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        emailEt.setMaxEms(16);
+        //setMaxEms() -> TextView'in genişliğini, gerçek metin uzantısına ve metin boyutuna bakılmaksızın n 'M' harfli bir metne sığacak şekilde ayarlar.
+
+        linearLayout.addView(emailEt);
+        linearLayout.setPadding(10,10,10,10);
+
+        builder.setView(linearLayout);
+
+        //recover butonu
+        builder.setPositiveButton("Recover", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //email git
+                String email = emailEt.getText().toString().trim();
+                beginRecovery(email);
+
+
+            }
+        });
+        //cancel butonu
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        });
+
+        //dialog göstermek için
+        builder.create().show();
+
+    }
+
+    private void beginRecovery(String email) {
+        //ProgressDialog göster
+        pd.setMessage("Sending Email...");
+        pd.show();
+
+        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                pd.dismiss();
+
+                if (task.isSuccessful()){
+                    Toast.makeText(LoginActivity.this,"Email sent", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(LoginActivity.this,"Failed..", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                pd.dismiss();
+                //error mesajı göster
+                Toast.makeText(LoginActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     private void loginUser(String email, String password) {
         //ProgressDialog göster
+        pd.setMessage("Logging in...");
         pd.show();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
