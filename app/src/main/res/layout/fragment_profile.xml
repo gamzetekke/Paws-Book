@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1EDED"
     tools:context=".ProfileFragment">
 
-
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:background="#2ECC71">
-            
+            android:layout_height="wrap_content">
+
+            //Profil Kapak Fotografı
+            <ImageView
+                android:id="@+id/coverPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="#2ECC71"
+                android:scaleType="fitXY">
+            </ImageView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
@@ -31,21 +38,22 @@
                     android:background="#6AE493"
                     android:padding="5dp">
                 </ImageView>
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#21D34E"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/nameTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
-                        android:textSize="25dp"
-                        android:textColor="#FFFFFF"></TextView>
+                        android:layout_marginTop="5dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="25dp"></TextView>
 
                     <TextView
                         android:id="@+id/emailTxt"
@@ -55,8 +63,9 @@
                         android:layout_marginLeft="5dp"
                         android:textColor="#FFFFFF"></TextView>
 
+
                     <TextView
-                        android:id="@+id/phoneTxt"
+                        android:id="@+id/descTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -70,7 +79,25 @@
 
 
         </RelativeLayout>
-    </RelativeLayout>
 
 
-</ScrollView>
+    </ScrollView>
+
+    //Floating ActionButton
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="#2ECC71"
+        android:src="@drawable/ic_baseline_edit_24">
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+</RelativeLayout>

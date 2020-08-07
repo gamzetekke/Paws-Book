@@ -108,9 +108,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 //bilgileri HashMap'e koyma
                                 hashMap.put("email", email);
                                 hashMap.put("uid", uid);
-                                hashMap.put("name",""); //profil ayarları sayfasında eklenecek
-                                hashMap.put("phone", "");//profil ayarları sayfasında eklenecek
-                                hashMap.put("image","" );//profil ayarları sayfasında eklenecek
+                                hashMap.put("name", ""); //profil ayarları sayfasında eklenecek
+                                hashMap.put("desc", "");//profil ayarları sayfasında eklenecek
+                                hashMap.put("image", "" );//profil ayarları sayfasında eklenecek
+                                hashMap.put("cover", "" );//profil ayarları sayfasında eklenecek
+
 
                                 //firebase database
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
