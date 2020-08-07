@@ -50,7 +50,7 @@ public class DashboardActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.content, homeFragment, "");
         ft.commit();
-        
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener selectedListener =

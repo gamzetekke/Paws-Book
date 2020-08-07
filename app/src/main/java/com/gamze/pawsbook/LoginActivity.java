@@ -291,26 +291,31 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            //Firebase auth'dan kullanıcı email ve uid bilgilerini al
-                            String email = user.getEmail();
-                            String uid = user.getUid();
-                            //Kullanıcı kaydoldugunda verileri depolamak için HashMap kullanılır
-                            //HashMap kullanımı
-                            HashMap<Object,String> hashMap = new HashMap<>();
-                            //bilgileri HashMap'e koyma
-                            hashMap.put("email", email);
-                            hashMap.put("uid", uid);
-                            hashMap.put("name",""); //profil ayarları sayfasında eklenecek
-                            hashMap.put("phone", "");//profil ayarları sayfasında eklenecek
-                            hashMap.put("image","" );//profil ayarları sayfasında eklenecek
 
-                            //firebase database
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            //"Users" isimli kullanıcının verilerini depolama
-                            DatabaseReference reference = database.getReference("Users");
-                            //HashMap ile verilerin database e eklenmesi
-                            reference.child(uid).setValue(hashMap);
+                            //eğer kullanıcının ilk girişiyse  kullanıcının bilgilerini google hesabından getir
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()){
 
+                                //Firebase auth'dan kullanıcı email ve uid bilgilerini al
+                                String email = user.getEmail();
+                                String uid = user.getUid();
+                                //Kullanıcı kaydoldugunda verileri depolamak için HashMap kullanılır
+                                //HashMap kullanımı
+                                HashMap<Object,String> hashMap = new HashMap<>();
+                                //bilgileri HashMap'e koyma
+                                hashMap.put("email", email);
+                                hashMap.put("uid", uid);
+                                hashMap.put("name",""); //profil ayarları sayfasında eklenecek
+                                hashMap.put("phone", "");//profil ayarları sayfasında eklenecek
+                                hashMap.put("image","" );//profil ayarları sayfasında eklenecek
+
+                                //firebase database
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                //"Users" isimli kullanıcının verilerini depolama
+                                DatabaseReference reference = database.getReference("Users");
+                                //HashMap ile verilerin database e eklenmesi
+                                reference.child(uid).setValue(hashMap);
+
+                            }
 
                             //Toast Mesaj ile kullanıcı email adresini göster
                             Toast.makeText(LoginActivity.this,""+user.getEmail(),Toast.LENGTH_SHORT).show();
