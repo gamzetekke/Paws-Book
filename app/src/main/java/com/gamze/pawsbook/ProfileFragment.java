@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -53,6 +54,8 @@ import java.util.HashMap;
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
+
+    Bitmap newImage;
 
     //Log Statment
     private static final String TAG = "ProfileFragment";
@@ -110,10 +113,10 @@ public class ProfileFragment extends Fragment {
         user = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
-        //storageReference = getInflate().getReference(); //storage reference (yorum satırından çıkartınca error veriyor)
+
+        storageReference = FirebaseStorage.getInstance().getReference();  //Firebase Storage Reference
 
         //init layout views
-
         avatar = view.findViewById(R.id.avatar);
         coverPhoto = view.findViewById(R.id.coverPhoto);
         nameTxt = view.findViewById(R.id.nameTxt);
@@ -121,6 +124,7 @@ public class ProfileFragment extends Fragment {
         descTxt = view.findViewById(R.id.descTxt);
         fab = view.findViewById(R.id.fab);
 
+        //init progress dialog
         pd = new ProgressDialog(getActivity());
 
         //izin arrayleri
@@ -439,7 +443,7 @@ public class ProfileFragment extends Fragment {
                     }
                 }
                 else if (which == 1){
-                    //galeir tıklandı
+                    //galeri tıklandı
                     //pd.setMessage("Updating Cover Picture");
                     if(!checkStoragePermission()){
                         requestStoragePermission();
