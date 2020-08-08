@@ -128,25 +128,5 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
 
-    //options menu dahil etme
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //menuyu dahil etme
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    //menu itemlerine onClick özelliği aktifleştirme
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        //itemlerin id'lerini al
-        int id = item.getItemId();
-        if (id == R.id.action_logout){
-            //hesaptan çıkış yap
-            firebaseAuth.signOut();
-            checkUserStatus();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
