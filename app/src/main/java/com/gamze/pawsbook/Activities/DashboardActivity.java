@@ -1,17 +1,20 @@
-package com.gamze.pawsbook;
+package com.gamze.pawsbook.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.gamze.pawsbook.Fragments.ChatListFragment;
+import com.gamze.pawsbook.Fragments.HomeFragment;
+import com.gamze.pawsbook.Fragments.MapFragment;
+import com.gamze.pawsbook.Fragments.ProfileFragment;
+import com.gamze.pawsbook.R;
+import com.gamze.pawsbook.Fragments.UsersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -92,6 +95,17 @@ public class DashboardActivity extends AppCompatActivity {
                             ftProfile.replace(R.id.content, profileFragment, "");
                             ftProfile.commit();
                             return true;
+
+                        case R.id.action_chat:
+                            //profile fragment değişimi
+                            actionBar.setTitle("Chats"); //ActionBar başlığını değiştirme
+                            ChatListFragment chatListFragment = new ChatListFragment();
+                            FragmentTransaction ftChat = getSupportFragmentManager().beginTransaction();
+                            ftChat.replace(R.id.content, chatListFragment, "");
+                            ftChat.commit();
+                            return true;
+
+
                     }
                     return false;
                 }

@@ -1,6 +1,7 @@
-package com.gamze.pawsbook;
+package com.gamze.pawsbook.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gamze.pawsbook.Activities.ChatActivity;
+import com.gamze.pawsbook.Models.ModelUser;
+import com.gamze.pawsbook.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -40,6 +44,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
          //get data
+        final String herUID =  userList.get(position).getUid();
         String userImage = userList.get(position).getImage();
         String userName = userList.get(position).getName();
         final String userEmail = userList.get(position).getEmail();
@@ -60,7 +65,12 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, ""+userEmail, Toast.LENGTH_SHORT).show();
+                //kullanıcı listesindeki kullanıcıya tıklandığında chat başlaması için
+                //alıcı UID'sini koyarak  activity başlatılcak
+                //UID'yi hangi kullanıcıyıla chat yapacagımızı belirlemek için kullandım
+                Intent intent = new Intent(context, ChatActivity.class);
+                intent.putExtra("herUid", herUID);
+                context.startActivity(intent);
             }
         });
 

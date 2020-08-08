@@ -1,4 +1,4 @@
-package com.gamze.pawsbook;
+package com.gamze.pawsbook.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gamze.pawsbook.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;

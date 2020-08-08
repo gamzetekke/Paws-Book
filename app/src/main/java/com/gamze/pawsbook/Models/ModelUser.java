@@ -1,4 +1,4 @@
-package com.gamze.pawsbook;
+package com.gamze.pawsbook.Models;
 
 public class ModelUser {
 

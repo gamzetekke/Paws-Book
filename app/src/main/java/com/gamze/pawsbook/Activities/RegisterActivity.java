@@ -1,4 +1,4 @@
-package com.gamze.pawsbook;
+package com.gamze.pawsbook.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gamze.pawsbook.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

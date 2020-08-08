@@ -20,4 +20,9 @@
         android:id="@+id/action_profile"
         android:icon="@drawable/tab_profile"
         android:title="Profile" />
+
+    <item
+        android:id="@+id/action_chat"
+        android:icon="@drawable/tab_chat"
+        android:title="Chat" />
 </menu>

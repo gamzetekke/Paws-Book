@@ -1,4 +1,4 @@
-package com.gamze.pawsbook;
+package com.gamze.pawsbook.Fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -7,13 +7,11 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -32,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gamze.pawsbook.Activities.MainActivity;
+import com.gamze.pawsbook.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -51,7 +51,6 @@ import com.google.firebase.storage.UploadTask;
 
 import com.squareup.picasso.Picasso;
 
-import java.security.Key;
 import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
