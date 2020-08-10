@@ -1,12 +1,16 @@
 package com.gamze.pawsbook.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +19,16 @@ import com.gamze.pawsbook.Models.ModelChat;
 import com.gamze.pawsbook.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,7 +69,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
         //get data
         String message = chatList.get(position).getMessage();
         String timeStamp = chatList.get(position).getTimestamp();
@@ -78,6 +89,36 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
 
         }
 
+        //tıklandığında delete dialog gözükmesi için
+        holder.messageLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //delete mesajını confirm dialog ile gösterilmesi
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Delete");
+                builder.setMessage("Are you sure the delete this message?");
+                //delete button
+                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteMessage(position);
+                    }
+                });
+                //cancel delete button
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dismiss dialog
+                        dialog.dismiss();
+                    }
+                });
+
+                //dialog oluştur ve göster
+                builder.create().show();
+
+            }
+        });
+
         //Mesajın ietildi/görüldü kısmının ayarlanması
         if (position == chatList.size() -1 ) {
             if (chatList.get(position).isSeen()){
@@ -92,6 +133,43 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
         }
 
 
+    }
+
+    private void deleteMessage(int position) {
+        final String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        //tıklanan mesajın zamanını alıp sohbetteki tüm mesajların zamanlarıyla karşılaştırır
+        //her iki değerin eşleştiği yerde mesajı siler
+        String msgTimeStamp = chatList.get(position).getTimestamp();
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
+        Query query = dbRef.orderByChild("timestamp").equalTo(msgTimeStamp);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    //kullanıcın sadece kendi yolladığı mesajı silebilmesi için sender ve myUID birbirine eşit olmalı
+                    if (ds.child("sender").getValue().equals(myUID)){
+                        //mesajın kaldırılması
+                         //ds.getRef().removeValue(); -> bu metot da kullanılabilir
+                        //kaldırılan mesajın yerine "This message was delete.." yazısının gelmesi
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("message", "This message was deleted...");
+                        ds.getRef().updateChildren(hashMap);
+
+                        Toast.makeText(context,"message deleted...",Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        Toast.makeText(context,"You can delete only your messages...",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -117,6 +195,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
         //layout views
         ImageView profilePic;
         TextView messageTxt, timeTxt, isSeenTxt;
+        LinearLayout messageLayout; //tıklandığında silme işleminin gösterilmesi için
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,6 +204,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
             messageTxt = itemView.findViewById(R.id.messageTxt);
             timeTxt = itemView.findViewById(R.id.timeTxt);
             isSeenTxt = itemView.findViewById(R.id.isSeenTxt);
+            messageLayout = itemView.findViewById(R.id.messageLayout);
 
 
         }

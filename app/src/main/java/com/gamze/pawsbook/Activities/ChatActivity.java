@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.Display;
 import android.view.Menu;
@@ -123,26 +125,32 @@ public class ChatActivity extends AppCompatActivity {
                     //get data
                     String name = ""+ ds.child("name").getValue();
                     herImage =""+ ds.child("image").getValue();
+                    String typingStatus =""+ ds.child("typing").getValue();
 
-                    //onlineStatus değerini al
-                    String onlineStatus = ""+ ds.child("onlineStatus").getValue();
-
-                    if (onlineStatus.equals("online")) {
-                        userStatusTxt.setText(onlineStatus);
+                    //typing status kontrol et
+                    if (typingStatus.equals(myUid)){
+                        userStatusTxt.setText("typing...");
                     }
-                    else {
-                        //zamanı uygun zaman dilimine dönüştür
-                        //timeStamp'ı dd/mm/yyyy hh:mm am/pm şekline dönüştürme
-                        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-                        calendar.setTimeInMillis(Long.parseLong(onlineStatus));
-                        String dateTime = DateFormat.format("dd/mm/yyyy hh:mm aa", calendar).toString();
+                    else{
+                        //onlineStatus değerini al
+                        String onlineStatus = ""+ ds.child("onlineStatus").getValue();
 
-                        userStatusTxt.setText("Last seen at: "+ dateTime);
+                        if (onlineStatus.equals("online")) {
+                            userStatusTxt.setText(onlineStatus);
+                        }
+                        else {
+                            //zamanı uygun zaman dilimine dönüştür
+                            //timeStamp'ı dd/mm/yyyy hh:mm am/pm şekline dönüştürme
+                            Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+                            calendar.setTimeInMillis(Long.parseLong(onlineStatus));
+                            String dateTime = DateFormat.format("dd/mm/yyyy hh:mm aa", calendar).toString();
+
+                            userStatusTxt.setText("Last seen at: "+ dateTime);
+                        }
                     }
 
                     //set data
                     nameTxt.setText(name);
-
 
                     try {
                         //resim alındı, resmi imageView'e gönder
@@ -180,6 +188,30 @@ public class ChatActivity extends AppCompatActivity {
                     //text boş değilse
                     sendMessage(message);
                 }
+            }
+        });
+
+        //edit text change listener kontrol et
+        message_editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().trim().length() == 0){
+                    checkTypingStatus("noOne");
+                }
+                else {
+                    checkTypingStatus(herUid); //alıcı uid'si
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -296,6 +328,14 @@ public class ChatActivity extends AppCompatActivity {
         dbRef.updateChildren(hashMap);
     }
 
+    private void checkTypingStatus(String typing) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(myUid);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("typingTo", typing);
+
+        //mevcut kullanıcının onlineStatus değerini günceller
+        dbRef.updateChildren(hashMap);
+    }
 
     @Override
     protected void onStart() {
@@ -315,6 +355,8 @@ public class ChatActivity extends AppCompatActivity {
 
         //son görülme saati ile birlikte ofline kısmını ayarla
         checkOnlineStatus(timestamp);
+
+        checkTypingStatus("noOne");
 
         userRefForSeen.removeEventListener(seenListener);
     }
