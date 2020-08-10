@@ -306,6 +306,8 @@ public class LoginActivity extends AppCompatActivity {
                                 hashMap.put("email", email);
                                 hashMap.put("uid", uid);
                                 hashMap.put("name",""); //profil ayarları sayfasında eklenecek
+                                hashMap.put("onlineStatus", "online");
+                                hashMap.put("typingTo", "noOne");
                                 hashMap.put("desc", "");//profil ayarları sayfasında eklenecek
                                 hashMap.put("image","" );//profil ayarları sayfasında eklenecek
                                 hashMap.put("cover","" );//profil ayarları sayfasında eklenecek
