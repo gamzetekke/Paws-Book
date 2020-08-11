@@ -77,7 +77,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.MyHolder> {
         //timeStamp'ı dd/mm/yyyy hh:mm am/pm şekline dönüştürme
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(timeStamp));
-        String dateTime = DateFormat.format("dd/mm/yyyy hh:mm aa", calendar).toString();
+        String dateTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
         //set data
         holder.messageTxt.setText(message);
