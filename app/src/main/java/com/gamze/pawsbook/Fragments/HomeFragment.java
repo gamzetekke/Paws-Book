@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gamze.pawsbook.Activities.AddPostActivity;
 import com.gamze.pawsbook.Activities.MainActivity;
 import com.gamze.pawsbook.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,8 +64,10 @@ public class HomeFragment extends Fragment {
     //options menu dahil etme
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         //menuyu dahil etme
         inflater.inflate(R.menu.main_menu, menu);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -77,6 +80,10 @@ public class HomeFragment extends Fragment {
             //hesaptan çıkış yap
             firebaseAuth.signOut();
             checkUserStatus();
+        }
+        else if (id == R.id.action_add){
+            //AddPostActivity açılması için
+            startActivity(new Intent(getActivity(), AddPostActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

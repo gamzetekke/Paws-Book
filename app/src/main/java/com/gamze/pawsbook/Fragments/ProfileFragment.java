@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gamze.pawsbook.Activities.AddPostActivity;
 import com.gamze.pawsbook.Activities.MainActivity;
 import com.gamze.pawsbook.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -249,8 +250,7 @@ public class ProfileFragment extends Fragment {
             //galeri seçildiğinde önce izin alınmış mı diye kontrol eder
             case STORAGE_REQUESTED_CODE: {
                 if (grantResults.length > 0 ){
-                    boolean cameraAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeStorageAccepted  = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeStorageAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     if(writeStorageAccepted){
                         //izinler etkinleştirildi
                         pickFromGallery();
@@ -578,6 +578,7 @@ public class ProfileFragment extends Fragment {
     //options menu dahil etme
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         //menuyu dahil etme
         inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
@@ -588,10 +589,15 @@ public class ProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         //itemlerin id'lerini al
         int id = item.getItemId();
+
         if (id == R.id.action_logout){
             //hesaptan çıkış yap
             firebaseAuth.signOut();
             checkUserStatus();
+        }
+        else if (id == R.id.action_add){
+            //AddPostActivity açmak için
+            startActivity(new Intent(getActivity(), AddPostActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

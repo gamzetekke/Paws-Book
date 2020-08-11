@@ -69,8 +69,8 @@ public class DashboardActivity extends AppCompatActivity {
                             FragmentTransaction ftHome = getSupportFragmentManager().beginTransaction();
                             ftHome.replace(R.id.content, homeFragment, "");
                             ftHome.commit();
-
                             return true;
+
                         case R.id.action_map:
                             //map fragment değişimi
                             actionBar.setTitle("Map"); //ActionBar başlığını değiştirme
@@ -79,6 +79,7 @@ public class DashboardActivity extends AppCompatActivity {
                             ftMap.replace(R.id.content, mapFragment, "");
                             ftMap.commit();
                             return true;
+
                         case R.id.action_users:
                             //users fragment değişimi
                             actionBar.setTitle("Users"); //ActionBar başlığını değiştirme
@@ -87,6 +88,7 @@ public class DashboardActivity extends AppCompatActivity {
                             ftUsers.replace(R.id.content, usersFragment, "");
                             ftUsers.commit();
                             return true;
+
                         case R.id.action_profile:
                             //profile fragment değişimi
                             actionBar.setTitle("Profile"); //ActionBar başlığını değiştirme
@@ -104,8 +106,6 @@ public class DashboardActivity extends AppCompatActivity {
                             ftChat.replace(R.id.content, chatListFragment, "");
                             ftChat.commit();
                             return true;
-
-
                     }
                     return false;
                 }

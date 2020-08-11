@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gamze.pawsbook.Activities.AddPostActivity;
 import com.gamze.pawsbook.Activities.MainActivity;
 import com.gamze.pawsbook.Adapters.AdapterUsers;
 import com.gamze.pawsbook.Models.ModelUser;
@@ -66,6 +67,18 @@ public class UsersFragment extends Fragment {
         getAllUsers();
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        checkUserStatus();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkUserStatus();
     }
 
     private void getAllUsers() {
@@ -169,8 +182,12 @@ public class UsersFragment extends Fragment {
     //options menu dahil etme
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         //menuyu dahil etme
         inflater.inflate(R.menu.main_menu, menu);
+
+        //add item gizlenmesi için
+        menu.findItem(R.id.action_add).setVisible(false);
 
         //SearchView
         MenuItem item = menu.findItem(R.id.action_search);
@@ -216,8 +233,6 @@ public class UsersFragment extends Fragment {
 
          super.onCreateOptionsMenu(menu, inflater);
     }
-
-
 
     //menu itemlerine onClick özelliği aktifleştirme
     @Override
