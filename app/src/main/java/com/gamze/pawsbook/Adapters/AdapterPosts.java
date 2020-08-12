@@ -1,12 +1,14 @@
 package com.gamze.pawsbook.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamze.pawsbook.Models.ModelPost;
 import com.gamze.pawsbook.R;
+import com.gamze.pawsbook.Activities.ThereProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -42,7 +45,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         //get data
-        String uid = postList.get(position).getPost_uid();
+        final String uid = postList.get(position).getPost_uid();
         String uEmail = postList.get(position).getPost_email();
         String uName = postList.get(position).getPost_name();
         String uDp = postList.get(position).getPost_dp();
@@ -112,6 +115,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 Toast.makeText(context,"Share", Toast.LENGTH_SHORT).show();
             }
         });
+        holder.profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //tıklandığında tıklayan kullanıcın uid'sini kullanarak ThereProfileActivity'e gidebilmek için
+                //ThereProfileActivity-> kullanıcının kendi gönderilerinin ve verilerinin gösterilmesi için
+                Intent intent = new Intent(context, ThereProfileActivity.class);
+                intent.putExtra("uid",uid);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -126,6 +139,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         ImageView uPicture_Imw, pImage_Imw;
         TextView uName_Txt, pTime_Txt, pTitle_Txt, pDesc_Txt, pLikes_Txt;
         ImageButton more_Btn, like_Btn, comment_Btn, share_Btn;
+        LinearLayout profileLayout;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -142,6 +156,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             like_Btn = itemView.findViewById(R.id.like_Btn);
             comment_Btn = itemView.findViewById(R.id.comment_Btn);
             share_Btn = itemView.findViewById(R.id.share_Btn);
+            profileLayout = itemView.findViewById(R.id.profileLayout);
 
         }
     }

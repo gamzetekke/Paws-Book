@@ -13,7 +13,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -27,11 +30,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gamze.pawsbook.Activities.AddPostActivity;
 import com.gamze.pawsbook.Activities.MainActivity;
+import com.gamze.pawsbook.Adapters.AdapterPosts;
+import com.gamze.pawsbook.Models.ModelPost;
 import com.gamze.pawsbook.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -52,7 +58,9 @@ import com.google.firebase.storage.UploadTask;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -76,6 +84,7 @@ public class ProfileFragment extends Fragment {
     ImageView avatar, coverPhoto;
     TextView nameTxt, emailTxt, descTxt;
     FloatingActionButton fab;
+    RecyclerView recyclerview_posts;
 
     //Progress Dialog
     ProgressDialog pd;
@@ -89,6 +98,10 @@ public class ProfileFragment extends Fragment {
     //izinler için gerekli arrayler
     String cameraPermissions[];
     String storagePermissions[];
+
+    List<ModelPost> postList;
+    AdapterPosts adapterPosts;
+    String uid;
 
     //seçilen resmin uri adresi
     Uri image_uri;
@@ -124,6 +137,7 @@ public class ProfileFragment extends Fragment {
         emailTxt = view.findViewById(R.id.emailTxt);
         descTxt = view.findViewById(R.id.descTxt);
         fab = view.findViewById(R.id.fab);
+        recyclerview_posts = view.findViewById(R.id.recyclerview_posts);
 
         //init progress dialog
         pd = new ProgressDialog(getActivity());
@@ -195,17 +209,98 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        postList = new ArrayList<>();
+
+        checkUserStatus();
+        loadMyPosts();
+
+
         return view;
     }
 
+    private void loadMyPosts() {
+        //recyclerView için linearLayout
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        //en yeni gönderiyi ilk göstermek için
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+        //layout'u recyclerView'e bağlama
+        recyclerview_posts.setLayoutManager(layoutManager);
 
-    private void requestStoragePermission(){
-        //runtime depolama izinleri isteme
-        requestPermissions(storagePermissions, STORAGE_REQUESTED_CODE);
+        //init postList
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //gönderiyi yüklemek için query
+        Query query = ref.orderByChild("uid").equalTo(uid);
+        //bu ref referansından tüm verileri al
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    ModelPost myPosts = ds.getValue(ModelPost.class);
+
+                    //listeye ekleme
+                    postList.add(myPosts);
+
+
+
+                    //adapter
+                    adapterPosts = new AdapterPosts(getActivity(), postList);
+                    //adapteri recyclerView'e bağlama
+                    recyclerview_posts.setAdapter(adapterPosts);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //errorla karşılaşılırsa
+                Toast.makeText(getActivity(),""+ error.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-    private void requestCameraPermission(){
-        //runtime depolama izinleri isteme
-        requestPermissions(cameraPermissions, CAMERA_REQUESTED_CODE);
+
+    private void searchMyPosts(final String searchQuery) {
+        //recyclerView için linearLayout
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        //en yeni gönderiyi ilk göstermek için
+        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
+        //layout'u recyclerView'e bağlama
+        recyclerview_posts.setLayoutManager(linearLayoutManager);
+
+        //init postList
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //gönderiyi yüklemek için query
+        Query query = ref.orderByChild("uid").equalTo(uid);
+        //bu ref referansından tüm verileri al
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    ModelPost myPosts = ds.getValue(ModelPost.class);
+
+                    if (myPosts.getPost_title().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                            myPosts.getPost_desc().toLowerCase().contains(searchQuery.toLowerCase())){
+
+                        //listeye ekleme
+                        postList.add(myPosts);
+                    }
+
+                    //adapter
+                    adapterPosts = new AdapterPosts(getActivity(), postList);
+                    //adapteri recyclerView'e bağlama
+                    recyclerview_posts.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //errorla karşılaşılırsa
+                Toast.makeText(getActivity(),""+ error.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private boolean checkStoragePermission(){
@@ -214,6 +309,11 @@ public class ProfileFragment extends Fragment {
                 == (PackageManager.PERMISSION_GRANTED);
         return  result;
     }
+    private void requestStoragePermission(){
+        //runtime depolama izinleri isteme
+        requestPermissions(storagePermissions, STORAGE_REQUESTED_CODE);
+    }
+
     private boolean checkCameraPermission(){
         //depolama izinlerini kontrol et, etkinse true, değilse false döndür
         boolean result = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
@@ -224,7 +324,10 @@ public class ProfileFragment extends Fragment {
 
         return  result && result1;
     }
-
+    private void requestCameraPermission(){
+        //runtime depolama izinleri isteme
+        requestPermissions(cameraPermissions, CAMERA_REQUESTED_CODE);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -290,8 +393,6 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-
     //Editprofile dialog
     private void showEditProfileDialog() {
         // Profil resmi düzenle, kapak fotografı gösterme, isim düzenleme, açıklama düzenleme
@@ -349,7 +450,6 @@ public class ProfileFragment extends Fragment {
         builder.create().show();
     }
 
-
     private void showNameDescUpdateDialog(final String key) {
         //key parametresi "name" ve "desc" değerlerini alıyor
 
@@ -373,7 +473,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //input text from edit text
-                String value = editText.getText().toString().trim();
+                final String value = editText.getText().toString().trim();
                 //kullanıcının bir şeyler girip girmediğini onayla
                 if (!TextUtils.isEmpty(value)){
                     pd.show();
@@ -397,6 +497,26 @@ public class ProfileFragment extends Fragment {
 
                         }
                     });
+
+                    //eğer kullanıcı ismini düzenlerse onun postlarında da ismin güncellenmesi
+                    if (key.equals("name")){
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                        Query query = ref.orderByChild("uid").equalTo(uid);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot ds: snapshot.getChildren()){
+                                    String child = ds.getKey();
+                                    snapshot.getRef().child(child).child("post_name").setValue(value);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
                 }
                 else {
                     Toast.makeText(getActivity(), "Please Enter "+key, Toast.LENGTH_SHORT).show();
@@ -416,7 +536,6 @@ public class ProfileFragment extends Fragment {
         //dialog'u oluştur ve göster
         builder.create().show();
     }
-
 
     private void showImagePicDialog() {
         //profil resmini cameradan ya da galeriden seçme seçenekleri ekleme
@@ -459,7 +578,6 @@ public class ProfileFragment extends Fragment {
 
     }
 
-
     private void uploadProfileCoverPhoto(final Uri uri) {
         //Show progress dialog
         pd.show();
@@ -477,7 +595,7 @@ public class ProfileFragment extends Fragment {
                         //resim depoya yüklendi, şimdi url'sini al ve kullanıcı veritabanında sakla
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful());
-                        Uri downloadUri = uriTask.getResult();
+                        final Uri downloadUri = uriTask.getResult();
 
                         //resmin yüklenip yüklenmediğini ve url'nin alındığını kontrol edin
                         if (uriTask.isSuccessful()){
@@ -505,6 +623,26 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
 
+                            //eğer kullanıcı ismini düzenlerse onun postlarında da ismin güncellenmesi
+                            if (profileORCoverPhoto.equals("image")){
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                                Query query = ref.orderByChild("uid").equalTo(uid);
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot ds: snapshot.getChildren()){
+                                            String child = ds.getKey();
+                                            snapshot.getRef().child(child).child("post_dp").setValue(downloadUri.toString());
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+
                         }
                         else {
                             //error
@@ -515,13 +653,13 @@ public class ProfileFragment extends Fragment {
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                         //bazı errorlar var, errorları al ve error mesajı göster, dissmis dialog
-                        pd.dismiss();
-                        Toast.makeText(getActivity(), e.getMessage(),Toast.LENGTH_SHORT).show();
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //bazı errorlar var, errorları al ve error mesajı göster, dissmis dialog
+                pd.dismiss();
+                Toast.makeText(getActivity(), e.getMessage(),Toast.LENGTH_SHORT).show();
 
-                 }
+            }
         });
 
     }
@@ -551,7 +689,6 @@ public class ProfileFragment extends Fragment {
 
     }
 
-
     private void checkUserStatus() {
 
         //mevcut kullanıcıyı al
@@ -560,6 +697,8 @@ public class ProfileFragment extends Fragment {
             //kullanıcı giriş yapmışsa burada kal
             //giriş yapan kullanıcının email i
             //profileTxt.setText(user.getEmail());
+
+            uid = user.getUid();
         }
         else{
             //kullanıcı giriş yapmamışsa main activity'e git
@@ -581,6 +720,40 @@ public class ProfileFragment extends Fragment {
         menu.clear();
         //menuyu dahil etme
         inflater.inflate(R.menu.main_menu, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+
+        //Kullanıcın postlarını aramak için SearchView
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //kullanıcı arama butonuna tıkladığında çağırılır
+                if (!TextUtils.isEmpty(query)){
+                    //search
+                    searchMyPosts(query);
+                }
+                else{
+                    loadMyPosts();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //kullanıcı her karakter girdiğinde çağırılır
+                if (!TextUtils.isEmpty(newText)){
+                    //search
+                    searchMyPosts(newText);
+                }
+                else{
+                    loadMyPosts();
+                }
+                return false;
+            }
+        });
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 

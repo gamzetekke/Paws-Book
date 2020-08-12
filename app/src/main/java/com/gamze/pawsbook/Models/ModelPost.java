@@ -2,7 +2,7 @@ package com.gamze.pawsbook.Models;
 
 public class ModelPost {
     //post yüklerken kullandığım aynı isimleri kullanmalıyım (AddPostActivity'deki)
-    String post_uid, post_Id, post_title, post_name, post_email, post_dp, post_desc, post_image, post_time;
+        String post_uid, post_Id, post_title, post_name, post_email, post_dp, post_desc, post_image, post_time;
 
     public ModelPost(){ }
 

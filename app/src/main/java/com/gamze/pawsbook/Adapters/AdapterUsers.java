@@ -1,13 +1,14 @@
 package com.gamze.pawsbook.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gamze.pawsbook.Activities.ChatActivity;
 import com.gamze.pawsbook.Models.ModelUser;
 import com.gamze.pawsbook.R;
+import com.gamze.pawsbook.Activities.ThereProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -65,12 +67,32 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //kullanıcı listesindeki kullanıcıya tıklandığında chat başlaması için
-                //alıcı UID'sini koyarak  activity başlatılcak
-                //UID'yi hangi kullanıcıyıla chat yapacagımızı belirlemek için kullandım
-                Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("herUid", herUID);
-                context.startActivity(intent);
+
+                //dialog'un gösterilmesi
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setItems(new String[]{"Profile", "Chat"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0){
+                                //profile tıklandı
+                                //tıklandığında tıklayan kullanıcın uid'sini kullanarak ThereProfileActivity'e gidebilmek için
+                                //ThereProfileActivity-> kullanıcının kendi gönderilerinin ve verilerinin gösterilmesi için
+                                Intent intent = new Intent(context, ThereProfileActivity.class);
+                                intent.putExtra("uid",herUID);
+                                context.startActivity(intent);
+                            }
+                            else if (which == 1){
+                                //chat tıklandı
+                                //kullanıcı listesindeki kullanıcıya tıklandığında chat başlaması için
+                                //alıcı UID'sini koyarak  activity başlatılcak
+                                //UID'yi hangi kullanıcıyıla chat yapacagımızı belirlemek için kullandım
+                                Intent intent = new Intent(context, ChatActivity.class);
+                                intent.putExtra("herUid", herUID);
+                                context.startActivity(intent);
+                            }
+                    }
+                });
+                builder.create().show();
             }
         });
 
