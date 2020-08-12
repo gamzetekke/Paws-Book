@@ -119,6 +119,7 @@ public class DashboardActivity extends AppCompatActivity {
             //kullanıcı giriş yapmışsa burada kal
             //giriş yapan kullanıcının email i
             //profileTxt.setText(user.getEmail());
+
         }
         else{
             //kullanıcı giriş yapmamışsa main activity'e git

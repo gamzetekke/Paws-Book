@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gamze.pawsbook.Activities.AddPostActivity;
 import com.gamze.pawsbook.Models.ModelPost;
 import com.gamze.pawsbook.R;
 import com.gamze.pawsbook.Activities.ThereProfileActivity;
@@ -156,6 +157,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         if (uid.equals(myUid)) {
             //Menuye item ekleme
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+            popupMenu.getMenu().add(Menu.NONE, 1,0, "Edit");
         }
 
         //menu itemlerine onClick özelliği ekleme
@@ -166,8 +168,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 if(id == 0){
                     //delete tıklandı
                     beginDelete(pId, pImage);
-
                 }
+                else if(id == 1){
+                    //edit tıklandı
+                    //key "editPost" ve id ile tıklandığında AddPostActivity'i başlat
+                    Intent intent = new Intent(context, AddPostActivity.class);
+                    intent.putExtra("key","editPost");
+                    intent.putExtra("editPostId", pId);
+                    context.startActivity(intent);
+                }
+
                 return false;
             }
         });
