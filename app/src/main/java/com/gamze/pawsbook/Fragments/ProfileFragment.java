@@ -498,7 +498,7 @@ public class ProfileFragment extends Fragment {
                         }
                     });
 
-                    //eğer kullanıcı ismini düzenlerse onun postlarında da ismin güncellenmesi
+                    //eğer kullanıcı ismini düzenlerse onun postlarında da ismin güncellenmesi için
                     if (key.equals("name")){
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
                         Query query = ref.orderByChild("uid").equalTo(uid);
@@ -623,11 +623,11 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
 
-                            //eğer kullanıcı ismini düzenlerse onun postlarında da ismin güncellenmesi
+                            //eğer kullanıcı ismini düzenlerse onun postlarında da ismin güncellenmesi için
                             if (profileORCoverPhoto.equals("image")){
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
                                 Query query = ref.orderByChild("uid").equalTo(uid);
-                                query.addValueEventListener(new ValueEventListener() {
+                                ref.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for (DataSnapshot ds: snapshot.getChildren()){

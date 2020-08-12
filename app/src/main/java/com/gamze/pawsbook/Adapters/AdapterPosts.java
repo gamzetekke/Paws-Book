@@ -1,14 +1,19 @@
 package com.gamze.pawsbook.Adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.text.format.DateFormat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +23,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gamze.pawsbook.Models.ModelPost;
 import com.gamze.pawsbook.R;
 import com.gamze.pawsbook.Activities.ThereProfileActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -29,9 +44,12 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     Context context;
     List<ModelPost> postList;
 
+    String myUid;
+
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
+        myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     @NonNull
@@ -43,16 +61,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
      }
 
     @Override
-    public void onBindViewHolder(@NonNull MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyHolder holder, int position) {
         //get data
         final String uid = postList.get(position).getPost_uid();
         String uEmail = postList.get(position).getPost_email();
         String uName = postList.get(position).getPost_name();
         String uDp = postList.get(position).getPost_dp();
-        String pId = postList.get(position).getPost_Id();
+        final String pId = postList.get(position).getPost_Id();
         String pTitle = postList.get(position).getPost_title();
         String pDescription = postList.get(position).getPost_desc();
-        String pImage = postList.get(position).getPost_image();
+        final String pImage = postList.get(position).getPost_image();
         String pTimeStamp = postList.get(position).getPost_time();
 
         //zaman göstergesini dd/mm/yyyy hh:mm am/pm şekline dönüştür
@@ -81,6 +99,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             holder.pImage_Imw.setVisibility(View.GONE);
         }
         else {
+            //imageview göster
+            holder.pImage_Imw.setVisibility(View.VISIBLE);
+
             try{
                 Picasso.get().load(pImage).into(holder.pImage_Imw);
             }
@@ -94,7 +115,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.more_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"More", Toast.LENGTH_SHORT).show();
+                showMoreOptions(holder.more_Btn, uid, myUid, pId, pImage);
             }
         });
         holder.like_Btn.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +146,113 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 context.startActivity(intent);
             }
         });
+    }
+
+    private void showMoreOptions(ImageButton more_btn, String uid, String myUid, final String pId, final String pImage) {
+        //postu silme işlemi için popup menu
+        PopupMenu popupMenu = new PopupMenu(context, more_btn, Gravity.END);
+
+        //delete seçeneğini sadece mevcut giriş yapmış kullanıcıya göster
+        if (uid.equals(myUid)) {
+            //Menuye item ekleme
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
+        }
+
+        //menu itemlerine onClick özelliği ekleme
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if(id == 0){
+                    //delete tıklandı
+                    beginDelete(pId, pImage);
+
+                }
+                return false;
+            }
+        });
+        //menuyu gösterme
+        popupMenu.show();
+    }
+
+    private void beginDelete(String pId, String pImage) {
+        //gönderi resimli veya resimsiz olabilir
+        if (pImage.equals("noImage")){
+            //resimsiz gönderi
+            deleteWithOutImage(pId);
+        }
+        else {
+            //resimli gönderi
+            deleteWithImage(pId, pImage);
+        }
+    }
+
+    private void deleteWithImage(final String pId, String pImage) {
+        //progressbar
+        final ProgressDialog pd = new ProgressDialog(context);
+        pd.setMessage("Deleting...");
+
+        //postu ilk önce url'ini kullanarak sil. Daha sonra gönderinin id'sini kullanarak veritabanından siler
+        StorageReference picRef = FirebaseStorage.getInstance().getReferenceFromUrl(pImage);
+        picRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //resim silindi, şimdi veritabanından sil
+                        Query fquery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("post_Id").equalTo(pId);
+                        fquery.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot ds: snapshot.getChildren()){
+                                    ds.getRef().removeValue();//pid'nin eşleştiği yerde değerleri firebase'den kaldır
+                                }
+                                //deleted
+                                Toast.makeText(context,"Deleted successfully", Toast.LENGTH_SHORT).show();
+                                pd.dismiss();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //failed
+                pd.dismiss();
+                Toast.makeText(context,""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void deleteWithOutImage(String pId) {
+        //progressbar
+        final ProgressDialog pd = new ProgressDialog(context);
+        pd.setMessage("Deleting...");
+
+        Query fquery = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("post_Id").equalTo(pId);
+        fquery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    ds.getRef().removeValue();//pid'nin eşleştiği yerde değerleri firebase'den kaldır
+                }
+                //deleted
+                Toast.makeText(context,"Deleted successfully", Toast.LENGTH_SHORT).show();
+                pd.dismiss();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override
