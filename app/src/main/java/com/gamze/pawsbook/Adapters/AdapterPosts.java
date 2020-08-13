@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamze.pawsbook.Activities.AddPostActivity;
 import com.gamze.pawsbook.Models.ModelPost;
+import com.gamze.pawsbook.Activities.PostDetailActivity;
 import com.gamze.pawsbook.R;
 import com.gamze.pawsbook.Activities.ThereProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,6 +30,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -45,12 +47,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     Context context;
     List<ModelPost> postList;
 
+    private DatabaseReference likesRef; //likes veritabanı için
+    private DatabaseReference postsRef;//posts reference
+
     String myUid;
 
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
     }
 
     @NonNull
@@ -62,7 +68,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
      }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
         //get data
         final String uid = postList.get(position).getPost_uid();
         String uEmail = postList.get(position).getPost_email();
@@ -73,6 +79,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String pDescription = postList.get(position).getPost_desc();
         final String pImage = postList.get(position).getPost_image();
         String pTimeStamp = postList.get(position).getPost_time();
+        String pComments = postList.get(position).getPost_comments();
 
         //zaman göstergesini dd/mm/yyyy hh:mm am/pm şekline dönüştür
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
@@ -84,6 +91,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.pTime_Txt.setText(pTime);
         holder.pTitle_Txt.setText(pTitle);
         holder.pDesc_Txt.setText(pDescription);
+        holder.pComment_Txt.setText(pComments+" Comments");
+
 
 
         //set user dp
@@ -119,16 +128,13 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 showMoreOptions(holder.more_Btn, uid, myUid, pId, pImage);
             }
         });
-        holder.like_Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"Like", Toast.LENGTH_SHORT).show();
-            }
-        });
         holder.comment_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"Comment", Toast.LENGTH_SHORT).show();
+                //PostDetailActivity başlat
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("postId",pId); //bu kimliği kullanarak gönderinin ayrıntılarını alacak, tıklanan gönderinin kimliği
+                context.startActivity(intent);
             }
         });
         holder.share_Btn.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +155,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         });
     }
 
+
     private void showMoreOptions(ImageButton more_btn, String uid, String myUid, final String pId, final String pImage) {
         //postu silme işlemi için popup menu
         PopupMenu popupMenu = new PopupMenu(context, more_btn, Gravity.END);
@@ -159,6 +166,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");
             popupMenu.getMenu().add(Menu.NONE, 1,0, "Edit");
         }
+        popupMenu.getMenu().add(Menu.NONE, 2,0, "View Detail");
+
 
         //menu itemlerine onClick özelliği ekleme
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -175,6 +184,12 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                     Intent intent = new Intent(context, AddPostActivity.class);
                     intent.putExtra("key","editPost");
                     intent.putExtra("editPostId", pId);
+                    context.startActivity(intent);
+                }
+                else if(id == 2){
+                    //PostDetailActivity başlat
+                    Intent intent = new Intent(context, PostDetailActivity.class);
+                    intent.putExtra("postId",pId); //bu kimliği kullanarak gönderinin ayrıntılarını alacak, tıklanan gönderinin kimliği
                     context.startActivity(intent);
                 }
 
@@ -275,8 +290,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
         //rows_post.xml view'leri
         ImageView uPicture_Imw, pImage_Imw;
-        TextView uName_Txt, pTime_Txt, pTitle_Txt, pDesc_Txt, pLikes_Txt;
-        ImageButton more_Btn, like_Btn, comment_Btn, share_Btn;
+        TextView uName_Txt, pTime_Txt, pTitle_Txt, pDesc_Txt, pComment_Txt;
+        ImageButton more_Btn,  comment_Btn, share_Btn;
         LinearLayout profileLayout;
 
         public MyHolder(@NonNull View itemView) {
@@ -289,9 +304,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             pTime_Txt = itemView.findViewById(R.id.pTime_Txt);
             pTitle_Txt = itemView.findViewById(R.id.pTitle_Txt);
             pDesc_Txt = itemView.findViewById(R.id.pDesc_Txt);
-            pLikes_Txt = itemView.findViewById(R.id.pLikes_Txt);
+            pComment_Txt = itemView.findViewById(R.id.pComments_Txt);
             more_Btn = itemView.findViewById(R.id.more_Btn);
-            like_Btn = itemView.findViewById(R.id.like_Btn);
             comment_Btn = itemView.findViewById(R.id.comment_Btn);
             share_Btn = itemView.findViewById(R.id.share_Btn);
             profileLayout = itemView.findViewById(R.id.profileLayout);

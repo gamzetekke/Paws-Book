@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.PostDetailActivity">
+    
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/commentsLayout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            //asıl gönderi
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="3dp"
+                app:contentPadding="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardBackgroundColor="#FFFFFF">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/profileLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/uPicture_Imw"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/tag_face">
+                        </de.hdodenhof.circleimageview.CircleImageView>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/uName_Txt"
+                                android:text="Name"
+                                android:textColor="#000000"
+                                android:textSize="20sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+                            </TextView>
+
+                            <TextView
+                                android:id="@+id/pTime_Txt"
+                                android:text="33 min"
+                                android:textSize="20sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+                            </TextView>
+
+                        </LinearLayout>
+
+
+                        <ImageButton
+                            android:id="@+id/more_Btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:src="@drawable/ic_more">
+                        </ImageButton>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/pTitle_Txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:autoLink="all"
+                        android:text="Title">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/pDesc_Txt"
+                        android:text="The description of the post"
+                        android:textColor="#000000"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="all">
+                    </TextView>
+
+                    <ImageView
+                        android:id="@+id/pImage_Imw"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="#FFFFFF"
+                        android:padding="5dp">
+                    </ImageView>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#F5F0F0">
+                    </View>
+
+                    <TextView
+                        android:id="@+id/pComments_Txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="textEnd">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="">
+
+                        <ImageButton
+                            android:id="@+id/share_Btn"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_baseline_share_24"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="#FFFFFF">
+                        </ImageButton>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            //yorum listesi
+            <TextView
+                android:text="Comments"
+                android:textColor="#000000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_comments"
+                android:drawableLeft="@drawable/ic_comments"
+                android:padding="2dp">
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/commentsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/cAvatarImw"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/tag_face">
+        </de.hdodenhof.circleimageview.CircleImageView>
+
+        <EditText
+            android:id="@+id/comment_Edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter comment..."
+            android:inputType="textCapSentences|textMultiLine"
+            android:layout_margin="1dp"
+            android:background="#FFFFFF"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/cAvatarImw"
+            android:layout_toStartOf="@+id/send_Btn"
+            android:layout_toRightOf="@+id/cAvatarImw"
+            android:layout_toLeftOf="@+id/send_Btn">
+        </EditText>
+
+        <ImageButton
+            android:id="@+id/send_Btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:background="#FFFFFF"
+            android:src="@drawable/send_foreground"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true">
+        </ImageButton>
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ThereProfileActivity"></activity>
+        <activity android:name=".Activities.PostDetailActivity"></activity>
+        <activity android:name=".Activities.ThereProfileActivity" />
         <activity android:name=".Activities.AddPostActivity" />
         <activity
             android:name=".Activities.ChatActivity"
@@ -26,11 +27,11 @@
         <activity android:name=".Activities.MainActivity" />
     </application>
     <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:name="android.permission.CAMERA"
         android:maxSdkVersion="29" />
 
     <uses-permission
-        android:name="android.permission.CAMERA"
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
 
 </manifest>

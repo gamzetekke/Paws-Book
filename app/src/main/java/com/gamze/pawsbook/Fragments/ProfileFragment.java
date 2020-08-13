@@ -242,8 +242,6 @@ public class ProfileFragment extends Fragment {
                     //listeye ekleme
                     postList.add(myPosts);
 
-
-
                     //adapter
                     adapterPosts = new AdapterPosts(getActivity(), postList);
                     //adapteri recyclerView'e bağlama
@@ -516,6 +514,41 @@ public class ProfileFragment extends Fragment {
 
                             }
                         });
+
+                        //eğer kullanıcı ismini güncellerse yorumlarda da ismini güncelle
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot ds: snapshot.getChildren()){
+                                    String child = ds.getKey();
+                                    if (snapshot.child(child).hasChild("Comments")) {
+                                        String child1 = ""+snapshot.child(child).getKey();
+                                        Query child2 = FirebaseDatabase.getInstance().getReference("Posts").child(child1).child("Comments").orderByChild("uid").equalTo(uid);
+                                        child2.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot ds: snapshot.getChildren()){
+                                                    String child = ds.getKey();
+                                                    snapshot.getRef().child(child).child("uName").setValue(value);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     }
                 }
                 else {
@@ -627,7 +660,7 @@ public class ProfileFragment extends Fragment {
                             if (profileORCoverPhoto.equals("image")){
                                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
                                 Query query = ref.orderByChild("uid").equalTo(uid);
-                                ref.addValueEventListener(new ValueEventListener() {
+                                query.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for (DataSnapshot ds: snapshot.getChildren()){
@@ -641,8 +674,43 @@ public class ProfileFragment extends Fragment {
 
                                     }
                                 });
-                            }
 
+                                //eğer kullanıcı ismini güncellerse yorumlarda da ismini güncelle
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot ds: snapshot.getChildren()){
+                                            String child = ds.getKey();
+                                            if (snapshot.child(child).hasChild("Comments")) {
+                                                String child1 = ""+snapshot.child(child).getKey();
+                                                Query child2 = FirebaseDatabase.getInstance().getReference("Posts").child(child1).child("Comments").orderByChild("uid").equalTo(uid);
+                                                child2.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        for (DataSnapshot ds: snapshot.getChildren()){
+                                                            String child = ds.getKey();
+                                                            snapshot.getRef().child(child).child("uDp").setValue(downloadUri.toString());
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                            }
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+
+                            }
                         }
                         else {
                             //error
@@ -714,7 +782,6 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    //options menu dahil etme
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();

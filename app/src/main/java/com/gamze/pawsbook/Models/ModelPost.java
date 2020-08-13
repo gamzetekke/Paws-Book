@@ -2,18 +2,15 @@ package com.gamze.pawsbook.Models;
 
 public class ModelPost {
     //post yüklerken kullandığım aynı isimleri kullanmalıyım (AddPostActivity'deki)
-        String post_uid, post_Id, post_title, post_name, post_email, post_dp, post_desc, post_image, post_time;
+    String post_uid, post_Id, post_title, post_comments, post_name, post_email, post_dp, post_desc, post_image, post_time;
 
-    public ModelPost(){ }
+    public ModelPost() {}
 
-    public ModelPost(String post_uid) {
-        this.post_uid = post_uid;
-    }
-
-    public ModelPost(String post_uid, String post_Id, String post_title, String post_name, String post_email, String post_dp, String post_desc, String post_image, String post_time) {
+    public ModelPost(String post_uid, String post_Id, String post_title, String post_comments, String post_name, String post_email, String post_dp, String post_desc, String post_image, String post_time) {
         this.post_uid = post_uid;
         this.post_Id = post_Id;
         this.post_title = post_title;
+        this.post_comments = post_comments;
         this.post_name = post_name;
         this.post_email = post_email;
         this.post_dp = post_dp;
@@ -44,6 +41,14 @@ public class ModelPost {
 
     public void setPost_title(String post_title) {
         this.post_title = post_title;
+    }
+
+    public String getPost_comments() {
+        return post_comments;
+    }
+
+    public void setPost_comments(String post_comments) {
+        this.post_comments = post_comments;
     }
 
     public String getPost_name() {
@@ -94,3 +99,5 @@ public class ModelPost {
         this.post_time = post_time;
     }
 }
+
+

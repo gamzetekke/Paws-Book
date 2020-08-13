@@ -26,10 +26,11 @@
         //Gönderinin resmi için ImageView
         <ImageView
             android:id="@+id/postImage_Imw"
-            android:background="@color/color"
+            android:background="#802ECC71"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="200dp">
+            android:minHeight="200dp"
+            android:maxHeight="300dp">
         </ImageView>
 
         //Gönderinin açıklaması için EditText
@@ -44,6 +45,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </EditText>
+
+        <TextView
+            android:id="@+id/pComments_Txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd">
+        </TextView>
 
         //Gönderiyi firebase'de yayınlamak için Button
         <Button
