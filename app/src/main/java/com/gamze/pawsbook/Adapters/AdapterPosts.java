@@ -3,6 +3,9 @@ package com.gamze.pawsbook.Adapters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gamze.pawsbook.Activities.AddPostActivity;
@@ -38,6 +42,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -75,8 +81,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String uName = postList.get(position).getPost_name();
         String uDp = postList.get(position).getPost_dp();
         final String pId = postList.get(position).getPost_Id();
-        String pTitle = postList.get(position).getPost_title();
-        String pDescription = postList.get(position).getPost_desc();
+        final String pTitle = postList.get(position).getPost_title();
+        final String pDescription = postList.get(position).getPost_desc();
         final String pImage = postList.get(position).getPost_image();
         String pTimeStamp = postList.get(position).getPost_time();
         String pComments = postList.get(position).getPost_comments();
@@ -140,7 +146,21 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.share_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"Share", Toast.LENGTH_SHORT).show();
+                //fotograf içeren ya da içermeyen iki tür gönderide ele alınacak
+
+                //imageview'den resim almak için
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) holder.pImage_Imw.getDrawable();
+                if (bitmapDrawable == null){
+                    //resimsiz gönderi
+                    shareTextOnly(pTitle,pDescription);
+                }
+                else {
+                    //resimli gönderi
+
+                    //resmi bitmap'e çevirme
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    shareImageAndText(pTitle, pDescription, bitmap);
+                }
             }
         });
         holder.profileLayout.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +175,57 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         });
     }
 
+    private void shareTextOnly(String pTitle, String pDescription) {
+        //paylaşmak için başlığı ve açıklamayı birleştir
+        String shareBody = pTitle +"\n" + pDescription;
+
+        //share intent
+        Intent sIntent = new Intent(Intent.ACTION_SEND);
+        sIntent.setType("text/plain");
+        sIntent.putExtra(Intent.EXTRA_SUBJECT,"Subject Here"); //eposta uygulaması ile paylaşılması durumunda
+        sIntent.putExtra(Intent.EXTRA_TEXT, shareBody); //paylaşılacak metin
+        context.startActivity(Intent.createChooser(sIntent, "Share via")); //shareDialog ta gösterilecek mesaj
+
+    }
+
+    private void shareImageAndText(String pTitle, String pDescription, Bitmap bitmap) {
+        //önce resmi önbelleğe kaydetmemiz gerekiyor
+        //kaydedilecek resmin uri'sini almak için
+        Uri uri = saveImageToShare(bitmap);
+
+        //paylaşmak için başlığı ve açıklamayı birleştir
+        String shareBody = pTitle +"\n" + pDescription;
+
+
+        //share intent
+        Intent sIntent = new Intent(Intent.ACTION_SEND);
+        sIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        sIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+        sIntent.setType("image/png");
+        context.startActivity(Intent.createChooser(sIntent,"Share via"));
+
+    }
+
+    private Uri saveImageToShare(Bitmap bitmap) {
+        File imageFolder = new File(context.getCacheDir(),"images");
+        Uri uri = null;
+        try{
+            imageFolder.mkdir(); //yoksa oluştur
+            File file = new File(imageFolder, "shared_image.png");
+
+            FileOutputStream stream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.flush();
+            stream.close();
+            uri = FileProvider.getUriForFile(context, "com.gamze.pawsbook.fileprovider", file);
+
+        }
+        catch (Exception e){
+            Toast.makeText(context,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        return uri;
+    }
 
     private void showMoreOptions(ImageButton more_btn, String uid, String myUid, final String pId, final String pImage) {
         //postu silme işlemi için popup menu

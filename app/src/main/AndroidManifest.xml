@@ -25,6 +25,24 @@
         </activity>
         <activity android:name=".Activities.RegisterActivity" />
         <activity android:name=".Activities.MainActivity" />
+
+        //file provider tanımlanması
+        //android:exported özelliğini false yap
+        //FileProvider public olmak zorunda değil
+        //android:grandUriPermissions özelliğini  true yap -> dosyalara geçiçi erişim izni vermek için
+        <provider
+            android:authorities="com.gamze.pawsbook.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths">
+            </meta-data>
+
+        </provider>
+
     </application>
     <uses-permission
         android:name="android.permission.CAMERA"

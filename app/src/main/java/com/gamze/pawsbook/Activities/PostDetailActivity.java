@@ -3,11 +3,15 @@ package com.gamze.pawsbook.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -43,6 +47,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -137,7 +143,84 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+        //share butonuna onClick özelliği ekleme
+        share_Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String pTitle = pTitle_Txt.getText().toString().trim();
+                String pDescription = pDesc_Txt.getText().toString().trim();
 
+                //fotograf içeren ya da içermeyen iki tür gönderide ele alınacak
+
+                //imageview'den resim almak için
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) pImage_Imw.getDrawable();
+                if (bitmapDrawable == null){
+                    //resimsiz gönderi
+                    shareTextOnly(pTitle,pDescription);
+                }
+                else {
+                    //resimli gönderi
+
+                    //resmi bitmap'e çevirme
+                    Bitmap bitmap = bitmapDrawable.getBitmap();
+                    shareImageAndText(pTitle, pDescription, bitmap);
+                }
+
+            }
+        });
+
+    }
+
+    private void shareTextOnly(String pTitle, String pDescription) {
+        //paylaşmak için başlığı ve açıklamayı birleştir
+        String shareBody = pTitle +"\n" + pDescription;
+
+        //share intent
+        Intent sIntent = new Intent(Intent.ACTION_SEND);
+        sIntent.setType("text/plain");
+        sIntent.putExtra(Intent.EXTRA_SUBJECT,"Subject Here"); //eposta uygulaması ile paylaşılması durumunda
+        sIntent.putExtra(Intent.EXTRA_TEXT, shareBody); //paylaşılacak metin
+        startActivity(Intent.createChooser(sIntent, "Share via")); //shareDialog ta gösterilecek mesaj
+
+    }
+
+    private void shareImageAndText(String pTitle, String pDescription, Bitmap bitmap) {
+        //önce resmi önbelleğe kaydetmemiz gerekiyor
+        //kaydedilecek resmin uri'sini almak için
+        Uri uri = saveImageToShare(bitmap);
+
+        //paylaşmak için başlığı ve açıklamayı birleştir
+        String shareBody = pTitle +"\n" + pDescription;
+
+
+        //share intent
+        Intent sIntent = new Intent(Intent.ACTION_SEND);
+        sIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        sIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject Here");
+        sIntent.setType("image/png");
+       startActivity(Intent.createChooser(sIntent,"Share via"));
+
+    }
+
+    private Uri saveImageToShare(Bitmap bitmap) {
+        File imageFolder = new File(getCacheDir(),"images");
+        Uri uri = null;
+        try{
+            imageFolder.mkdir(); //yoksa oluştur
+            File file = new File(imageFolder, "shared_image.png");
+
+            FileOutputStream stream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
+            stream.flush();
+            stream.close();
+            uri = FileProvider.getUriForFile(this, "com.gamze.pawsbook.fileprovider", file);
+
+        }
+        catch (Exception e){
+            Toast.makeText(this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        return uri;
     }
 
     private void loadComments() {
