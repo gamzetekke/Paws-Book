@@ -4,14 +4,9 @@ public class ModelUser {
 
     //Firabase database ile aynı isimleri kullan
 
-    String name, email, search, desc, image, cover, uid;
+    String name, email, search, desc, image, cover, uid, onlineStatus, typingTo;
 
-    public ModelUser() {
-
-    }
-
-    public ModelUser(String name, String email, String search, String desc, String image, String cover){
-
+    public ModelUser(String name, String email, String search, String desc, String image, String cover, String uid, String onlineStatus, String typingTo) {
         this.name = name;
         this.email = email;
         this.search = search;
@@ -19,13 +14,19 @@ public class ModelUser {
         this.image = image;
         this.cover = cover;
         this.uid = uid;
+        this.onlineStatus = onlineStatus;
+        this.typingTo = typingTo;
+    }
+
+    public ModelUser() {
+
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -33,7 +34,7 @@ public class ModelUser {
         return email;
     }
 
-    public void setEmail(String email){
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -41,7 +42,7 @@ public class ModelUser {
         return search;
     }
 
-    public void setSearch(String search){
+    public void setSearch(String search) {
         this.search = search;
     }
 
@@ -49,7 +50,7 @@ public class ModelUser {
         return desc;
     }
 
-    public void setDesc(String desc){
+    public void setDesc(String desc) {
         this.desc = desc;
     }
 
@@ -57,7 +58,7 @@ public class ModelUser {
         return image;
     }
 
-    public void setImage(String image){
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -65,30 +66,31 @@ public class ModelUser {
         return cover;
     }
 
-    public void setCover(String cover){
+    public void setCover(String cover) {
         this.cover = cover;
     }
 
-    public String getUid(){
+    public String getUid() {
         return uid;
     }
 
-    public void  setUid(String uid){
+    public void setUid(String uid) {
         this.uid = uid;
     }
 
+    public String getOnlineStatus() {
+        return onlineStatus;
+    }
 
+    public void setOnlineStatus(String onlineStatus) {
+        this.onlineStatus = onlineStatus;
+    }
 
+    public String getTypingTo() {
+        return typingTo;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    public void setTypingTo(String typingTo) {
+        this.typingTo = typingTo;
+    }
 }

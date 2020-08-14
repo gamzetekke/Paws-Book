@@ -77,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+
         //init layout views
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,12 +106,16 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         herUid = intent.getStringExtra("herUid");
 
+
         //Firebase Auth başlatmak için
         firebaseAuth = FirebaseAuth.getInstance();
 
         //Firebase database başlatmak için
         firebaseDatabase =  firebaseDatabase.getInstance();
         usersDbRef = firebaseDatabase.getReference("Users");
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        myUid = user.getUid();
 
 
 
@@ -215,6 +220,48 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+
+
+        //Firebase database'de chatList child/node oluştur
+        final DatabaseReference chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(myUid).child(herUid);
+
+        chatRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()){
+                    chatRef1.child("id").setValue(herUid);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //Firebase database'de chatList child/node oluştur
+        final DatabaseReference chatRef2 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(herUid).child(myUid);
+
+        chatRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()){
+                    chatRef2.child("id").setValue(myUid);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+
+
+
+
         readMessages();
 
         seenMessage();
@@ -309,7 +356,7 @@ public class ChatActivity extends AppCompatActivity {
             //giriş yapan kullanıcının email i
             //profileTxt.setText(user.getEmail());
 
-            myUid = user.getUid(); //mevcut oturum açmış kullanıcının uid'si
+            //myUid = user.getUid(); //mevcut oturum açmış kullanıcının uid'si
         }
         else{
             //kullanıcı giriş yapmamışsa main activity'e git
