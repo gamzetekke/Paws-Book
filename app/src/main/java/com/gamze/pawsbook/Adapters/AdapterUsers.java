@@ -56,7 +56,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder>{
         holder.emailTxt.setText(userEmail);
         try {
             Picasso.get().load(userImage)
-                    .placeholder(R.drawable.tag_face)
+                    .placeholder(R.mipmap.default_pic_foreground)
                     .into(holder.avatar);
         }
         catch (Exception e){

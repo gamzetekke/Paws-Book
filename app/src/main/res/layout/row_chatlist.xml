@@ -14,19 +14,30 @@
             android:id="@+id/profileIv"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/tag_face">
+            android:src="@mipmap/default_pic_foreground">
         </de.hdodenhof.circleimageview.CircleImageView>
 
 
         //online/offline status için imageView
-        <ImageView
-            android:id="@+id/onlineStatusIv"
-            android:layout_width="25dp"
-            android:layout_height="25dp">
-        </ImageView>
 
 
         //kullanıcı adı
+
+        <ImageView
+            android:id="@+id/onlineStatusIv"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_alignEnd="@id/profileIv"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentBottom="false"
+            android:layout_centerHorizontal="false"
+            android:layout_marginEnd="0dp"></ImageView>
+
         <TextView
             android:id="@+id/nameTv"
             android:layout_width="match_parent"

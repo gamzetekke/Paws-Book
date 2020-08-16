@@ -145,7 +145,7 @@ public class ThereProfileActivity extends AppCompatActivity {
         //gönderiyi yüklemek için query
         Query query = ref.orderByChild("uid").equalTo(uid);
         //bu ref referansından tüm verileri al
-        ref.addValueEventListener(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 postList.clear();
@@ -249,7 +249,6 @@ public class ThereProfileActivity extends AppCompatActivity {
         MenuItem item = menu.findItem(R.id.action_search);
 
         //Kullanıcın postlarını aramak için SearchView
-
        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
        // SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
 

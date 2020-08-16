@@ -20,7 +20,7 @@
             android:id="@+id/profilePic"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/tag_face">
+            android:src="@mipmap/default_pic_foreground">
         </de.hdodenhof.circleimageview.CircleImageView>
 
 

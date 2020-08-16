@@ -75,7 +75,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
 
         //kullanıcı profil resmini ayarla
         try {
-            Picasso.get().load(image).placeholder(R.drawable.tag_face).into(holder.avatarIv);
+            Picasso.get().load(image).placeholder(R.mipmap.default_pic_foreground).into(holder.avatarIv);
         }
         catch (Exception e){
 

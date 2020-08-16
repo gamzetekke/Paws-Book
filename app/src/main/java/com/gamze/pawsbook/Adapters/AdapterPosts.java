@@ -103,7 +103,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
         //set user dp
         try{
-            Picasso.get().load(uDp).placeholder(R.drawable.tag_face).into(holder.uPicture_Imw);
+            Picasso.get().load(uDp).placeholder(R.mipmap.default_pic_foreground).into(holder.uPicture_Imw);
         }
         catch (Exception e){
         }

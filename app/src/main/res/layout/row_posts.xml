@@ -27,7 +27,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/tag_face">
+                android:src="@mipmap/default_pic_foreground">
             </de.hdodenhof.circleimageview.CircleImageView>
             
             <LinearLayout

@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/color"
+        android:background="@color/colorAccent"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         //alıcı profil resmi
@@ -20,8 +20,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/tag_face_white"
-            android:background="@color/color">
+            android:src="@mipmap/default_pic_foreground"
+            android:background="@color/colorAccent">
         </de.hdodenhof.circleimageview.CircleImageView>
         
         <LinearLayout

@@ -78,6 +78,7 @@ public class DashboardActivity extends AppCompatActivity {
                             FragmentTransaction ftMap = getSupportFragmentManager().beginTransaction();
                             ftMap.replace(R.id.content, mapFragment, "");
                             ftMap.commit();
+
                             return true;
 
                         case R.id.action_users:

@@ -60,11 +60,11 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             holder.lastMessageTv.setText(lastMessage);
         }
         try {
-            Picasso.get().load(userImage).placeholder(R.drawable.tag_face).into(holder.profileIv);
+            Picasso.get().load(userImage).placeholder(R.mipmap.default_pic_foreground).into(holder.profileIv);
 
         }
         catch (Exception e){
-            Picasso.get().load(R.drawable.tag_face).into(holder.profileIv);
+            Picasso.get().load(R.mipmap.default_pic_foreground).into(holder.profileIv);
         }
 
         //chatlist'deki diğer kullanıcıların online statulerini kur

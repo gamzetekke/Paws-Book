@@ -19,7 +19,7 @@
                 android:id="@+id/coverPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:background="#2ECC71"
+                android:background="#4CAF50"
                 android:scaleType="fitXY">
             </ImageView>
 
@@ -36,14 +36,14 @@
                     android:layout_height="120dp"
                     android:src="@drawable/add_photo_foreground"
                     android:layout_marginStart="20dp"
-                    android:background="#6AE493"
+                    android:background="#806AE493"
                     android:padding="5dp">
                 </ImageView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#3221D34E"
+                    android:background="#4D21D34E"
                     android:orientation="vertical">
 
                     <TextView
@@ -91,7 +91,6 @@
     </ScrollView>
 
     //Floating ActionButton
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -102,7 +101,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:backgroundTint="#2ECC71"
+        android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_baseline_edit_24">
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
 

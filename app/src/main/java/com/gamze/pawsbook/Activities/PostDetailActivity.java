@@ -470,10 +470,10 @@ public class PostDetailActivity extends AppCompatActivity {
                     //set data
                     try {
                         //görüntü alınırsa ayarlar
-                        Picasso.get().load(myDp).placeholder(R.drawable.tag_face).into(cAvatarImw);
+                        Picasso.get().load(myDp).placeholder(R.mipmap.default_pic_foreground).into(cAvatarImw);
                     }
                     catch (Exception e){
-                        Picasso.get().load(R.drawable.tag_face).into(cAvatarImw);
+                        Picasso.get().load(R.mipmap.default_pic_foreground).into(cAvatarImw);
                     }
                 }
             }
@@ -537,10 +537,10 @@ public class PostDetailActivity extends AppCompatActivity {
 
                     //yorum kısmındaki kullancıı resmini ayarlama
                     try {
-                        Picasso.get().load(herDp).placeholder(R.drawable.tag_face).into(uPicture_Imw);
+                        Picasso.get().load(herDp).placeholder(R.mipmap.default_pic_foreground).into(uPicture_Imw);
                     }
                     catch (Exception e){
-                        Picasso.get().load(R.drawable.tag_face).into(uPicture_Imw);
+                        Picasso.get().load(R.mipmap.default_pic_foreground).into(uPicture_Imw);
                     }
                 }
             }
