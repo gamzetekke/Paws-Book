@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.PostDetailActivity">
-    
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -176,7 +176,7 @@
             android:id="@+id/cAvatarImw"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/tag_face">
+            android:src="@mipmap/default_pic_foreground">
         </de.hdodenhof.circleimageview.CircleImageView>
 
         <EditText

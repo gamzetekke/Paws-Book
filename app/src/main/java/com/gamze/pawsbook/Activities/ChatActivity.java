@@ -159,12 +159,12 @@ public class ChatActivity extends AppCompatActivity {
 
                     try {
                         //resim alındı, resmi imageView'e gönder
-                        Picasso.get().load(herImage).placeholder(R.drawable.tag_face).into(profilePic);
+                        Picasso.get().load(herImage).placeholder(R.mipmap.default_pic_foreground).into(profilePic);
 
                     }
                     catch (Exception e){
                         //profil resmini alırken bir sorun oluştuysa imageView'e varsayılan resmi koy
-                        Picasso.get().load(R.drawable.tag_face).into(profilePic);
+                        Picasso.get().load(R.mipmap.default_pic_foreground).into(profilePic);
 
                     }
 

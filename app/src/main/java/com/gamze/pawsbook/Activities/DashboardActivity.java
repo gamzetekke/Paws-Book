@@ -11,7 +11,6 @@ import android.view.MenuItem;
 
 import com.gamze.pawsbook.Fragments.ChatListFragment;
 import com.gamze.pawsbook.Fragments.HomeFragment;
-import com.gamze.pawsbook.Fragments.MapFragment;
 import com.gamze.pawsbook.Fragments.ProfileFragment;
 import com.gamze.pawsbook.R;
 import com.gamze.pawsbook.Fragments.UsersFragment;
@@ -74,10 +73,13 @@ public class DashboardActivity extends AppCompatActivity {
                         case R.id.action_map:
                             //map fragment değişimi
                             actionBar.setTitle("Map"); //ActionBar başlığını değiştirme
-                            MapFragment mapFragment = new MapFragment();
-                            FragmentTransaction ftMap = getSupportFragmentManager().beginTransaction();
-                            ftMap.replace(R.id.content, mapFragment, "");
-                            ftMap.commit();
+                            //MapFragment mapFragment = new MapFragment();
+                            //FragmentTransaction ftMap = getSupportFragmentManager().beginTransaction();
+                            //ftMap.replace(R.id.content, mapFragment, "");
+                            //ftMap.commit();
+
+                            Intent intent = new Intent(DashboardActivity.this, MapActivitiy.class);
+                            startActivity(intent);
 
                             return true;
 

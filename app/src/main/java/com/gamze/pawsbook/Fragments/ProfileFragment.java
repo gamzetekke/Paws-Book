@@ -168,14 +168,11 @@ public class ProfileFragment extends Fragment {
                     String image = ""+ ds.child("image").getValue();
                     String cover = ""+ ds.child("cover").getValue();
 
-
-
                     //set data
                     nameTxt.setText(name);
                     emailTxt.setText(email);
                     descTxt.setText(desc);
                     Log.d(TAG, "onDataChange: \nName: "+name+" email: "+ email);
-
 
                     try {
                         // resim alınırsa ayarla

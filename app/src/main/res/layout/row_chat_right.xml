@@ -23,7 +23,7 @@
             android:visibility="gone"
             app:civ_border_color="#000000"
             app:civ_border_overlay="true"
-            android:src="@drawable/tag_face">
+            android:src="@mipmap/default_pic_foreground">
         </de.hdodenhof.circleimageview.CircleImageView>
 
 

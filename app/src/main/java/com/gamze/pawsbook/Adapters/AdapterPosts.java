@@ -61,7 +61,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     public AdapterPosts(Context context, List<ModelPost> postList) {
         this.context = context;
         this.postList = postList;
-        myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+         myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     }
 
@@ -231,7 +231,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         //postu silme işlemi için popup menu
         PopupMenu popupMenu = new PopupMenu(context, more_btn, Gravity.END);
 
-        //delete seçeneğini sadece mevcut giriş yapmış kullanıcıya göster
+        //delete ve edit seçeneğini sadece mevcut giriş yapmış kullanıcıya göster
         if (uid.equals(myUid)) {
             //Menuye item ekleme
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete");

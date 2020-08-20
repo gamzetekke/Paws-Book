@@ -233,7 +233,6 @@ public class LoginActivity extends AppCompatActivity {
                             //dismiss progress dialog
                             pd.dismiss();
 
-
                             //kullanıcı girişi başarılıysa profil activity e git
                             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                             startActivity(intent);

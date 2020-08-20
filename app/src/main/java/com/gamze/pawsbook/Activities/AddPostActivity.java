@@ -440,8 +440,6 @@ public class AddPostActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] data = baos.toByteArray();
 
-
-
             //resimli gönderi
             StorageReference ref = FirebaseStorage.getInstance().getReference().child(filePathAndName);
             ref.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

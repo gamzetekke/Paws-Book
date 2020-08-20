@@ -94,7 +94,7 @@ public class UsersFragment extends Fragment {
                 for (DataSnapshot ds: snapshot.getChildren()){
                     ModelUser modelUser = ds.getValue(ModelUser.class);
 
-                    //mevcut oturum açmış olan tüm kullanıcıları al
+                    //mevcut kayıt olan tüm kullanıcıları al
                     if (!modelUser.getUid().equals(fUser.getUid())){
                         userList.add(modelUser);
                     }

@@ -9,6 +9,14 @@
         android:roundIcon="@mipmap/ic_icon_circle"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_key">
+        </meta-data>
+
+        <activity android:name=".Activities.MapActivitiy"></activity>
         <activity android:name=".Activities.PostDetailActivity" />
         <activity android:name=".Activities.ThereProfileActivity" />
         <activity android:name=".Activities.AddPostActivity" />
@@ -35,19 +43,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/paths" />
         </provider>
-
-        <meta-data
-            android:name="com.google.android.geo.AIzaSyCX028nra36PqmvUUvdm1VdBLJX8iaEXvo"
-            android:value="@string/google_maps_key" />
-
     </application>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission
         android:name="android.permission.CAMERA"
         android:maxSdkVersion="29" />
-
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="29" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

@@ -145,7 +145,7 @@ public class ThereProfileActivity extends AppCompatActivity {
         //gönderiyi yüklemek için query
         Query query = ref.orderByChild("uid").equalTo(uid);
         //bu ref referansından tüm verileri al
-        query.addValueEventListener(new ValueEventListener() {
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 postList.clear();
